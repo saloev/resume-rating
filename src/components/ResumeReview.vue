@@ -30,32 +30,35 @@
               <v-col cols="12">
                 <v-expansion-panels accordion>
                     <v-expansion-panel
-                      v-for="(item,i) in 2"
+                      v-for="(item,i) in formData"
                       :key="i"
                     >
                     <v-expansion-panel-header>
-                      <span class="text-left">{{i === 0 ? 'Hard Skills' : 'Soft skills'}}</span>
+                      <span class="text-left">{{i === 1 ? 'Hard Skills' : 'Soft skills'}}</span>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-container fluid>
-                        <v-row>
+                        <v-row v-for="(subItem, subItemKey) in item" :key="subItemKey + 'raiting'">
                           <v-col cols="12" sm="6">
-                            Ext
+                            {{subItem.text}}
                           </v-col>
                           <v-col cols="12" sm="5">
                             <div class="text-center">
-                              <v-rating v-model="rating"></v-rating>
+                              <v-rating v-model="subItem.raiting"></v-rating>
                             </div>
                           </v-col>
                           <v-col cols="12" sm="1">
-                            <v-btn text medium>+ Note</v-btn>
+                            <v-btn text medium
+                            @click="toggleNote(i, subItemKey, subItem.makeNote)">+ Note</v-btn>
                           </v-col>
                           <v-col cols="12">
                             <v-textarea
+                              transition="dialog-bottom-transition"
+                              v-show="subItem.makeNote"
                               filled
                               name="input-7-4"
                               label="Skill note"
-                              value=""
+                              v-model="subItem.note"
                             ></v-textarea>
                           </v-col>
                         </v-row>
@@ -97,6 +100,7 @@ export default {
       default: false,
     },
   },
+
   data() {
     return {
       dialog: false,
@@ -115,6 +119,43 @@ export default {
           ],
         },
       ],
+
+      formData: [
+        [
+          {
+            rating: 0,
+            note: '',
+            text: 'Ability to think on your feet',
+          },
+          {
+            rating: 0,
+            note: '',
+            text: 'Commutication',
+          },
+          {
+            rating: 0,
+            note: '',
+            text: 'Management',
+          },
+        ],
+        [
+          {
+            rating: 0,
+            note: '',
+            text: 'html',
+          },
+          {
+            rating: 0,
+            note: '',
+            text: 'css',
+          },
+          {
+            rating: 0,
+            note: '',
+            text: 'js',
+          },
+        ],
+      ],
     };
   },
 
@@ -128,8 +169,28 @@ export default {
     },
   },
 
+  methods: {
+    addToggleNoteToForm() {
+      this.formData = this.formData.map(item => item.map(value => ({ ...value, makeNote: false })));
+    },
+
+    saveForm() {
+
+    },
+
+    resetForm() {
+
+    },
+
+    toggleNote(fromSectionKey, formItemKey, showNote) {
+      const isShowNote = !showNote;
+      this.formData[fromSectionKey][formItemKey].makeNote = isShowNote;
+      this.formData = this.formData;
+    },
+  },
+
   mounted() {
-    // this.dialog = this.showDialog;
+    this.addToggleNoteToForm();
   },
 };
 </script>

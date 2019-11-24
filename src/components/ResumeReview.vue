@@ -165,6 +165,9 @@ export default {
     },
 
     dialog(newVal) {
+      if (!newVal) {
+        this.resetForm();
+      }
       this.$emit('update:showDialog', newVal);
     },
   },
@@ -174,12 +177,14 @@ export default {
       this.formData = this.formData.map(item => item.map(value => ({ ...value, makeNote: false })));
     },
 
-    saveForm() {
-
+    saveForm(e) {
+      e.preventDefault();
     },
 
     resetForm() {
-
+      this.formData = this.formData.map(item => item.map(value => ({
+        ...value, raiting: 0, note: '', makeNote: false,
+      })));
     },
 
     toggleNote(fromSectionKey, formItemKey, showNote) {

@@ -1,4 +1,5 @@
 <template>
+<div>
   <v-row align="center">
     <v-card
       class="mx-auto"
@@ -10,7 +11,7 @@
         :avatar="true"
       >
         <v-subheader>Resume list</v-subheader>
-        <v-list-item-group v-model="item" color="primary">
+        <v-list-item-group v-model="selectedItem" color="primary">
           <v-list-item
             v-for="(item, i) in items"
             :key="i"
@@ -29,12 +30,23 @@
       </v-list>
     </v-card>
   </v-row>
+
+  <resume-review :showDialog.sync="makeReview" :person="person"></resume-review>
+</div>
+
+
 </template>
 
 <script>
+import ResumeReview from './ResumeReview.vue';
+
 export default {
+  components: {
+    ResumeReview,
+  },
+
   data: () => ({
-    item: 5,
+    selectedItem: null,
     items: [
       {
         avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
@@ -62,6 +74,20 @@ export default {
         subtitle: "<span class='text--primary'>Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
       },
     ],
+
+    makeReview: false,
+    person: undefined,
   }),
+
+  watch: {
+    selectedItem(newVal) {
+      const { title: name, avatar: img } = this.items[newVal];
+      this.person = {
+        name,
+        img,
+      };
+      this.makeReview = true;
+    },
+  },
 };
 </script>
